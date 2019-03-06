@@ -1,0 +1,78 @@
+namespace LerJson
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+
+
+            IniciarLeitura();
+
+
+        }
+
+       static private void IniciarLeitura()
+        {
+
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+
+                    Stream stream = client.OpenRead("http://jsonplaceholder.typicode.com/users");
+                    StreamReader streamRead = new StreamReader(stream);
+                    string linhas = streamRead.ReadToEnd();
+
+                    JavaScriptSerializer desirializador = new JavaScriptSerializer();
+                    List<Usuario> usuario = desirializador.Deserialize<List<Usuario>>(linhas);
+
+                    Console.WriteLine("########### Web Site de Todos os Usuários ############");
+                    Console.WriteLine("   ");
+                    usuario.ForEach(a => Console.WriteLine("--> " + a.Website));
+                    Console.WriteLine("   ");
+                    Console.WriteLine("   ");
+                    Console.WriteLine("_____________________________________________________");
+                    Console.WriteLine("   ");
+                    Console.WriteLine("   ");
+
+                    Console.WriteLine("########### Email da usuária Samantha ################");
+                    foreach (Usuario usuario_ in usuario.Where(a => a.Username.ToLower().Trim().Contains("samantha")))
+                    {
+                        Console.WriteLine("   ");
+                        Console.WriteLine("--> " + usuario_.Email);
+                    }
+                    Console.WriteLine("_____________________________________________________");
+                    Console.WriteLine("   ");
+                    Console.WriteLine("   ");
+                    Console.WriteLine("   ");
+
+                    Console.WriteLine("############ Quantidade usuários do Emisfério Sul ############");
+                    Console.WriteLine("   ");
+                    Console.WriteLine("--> " + usuario.Where(a => a.address.geo.Lat.Contains("-")).Count());
+                    Console.WriteLine("   ");
+                    Console.WriteLine("   ");
+                    Console.WriteLine("_____________________________________________________");
+                    Console.WriteLine("   ");
+                    Console.WriteLine("   ");
+                    Console.WriteLine("   ");
+                    Console.WriteLine("   ");
+                    Console.WriteLine("   ");
+                    Console.WriteLine("********** Toque Para encerrar o programa ***********");
+                    Console.ReadKey();
+
+                }
+            }
+            catch (Exception e)
+            {
+
+
+                Console.WriteLine("Erro ao Acessar o Serviço  \n\nLog do erro:"+e.Message+"\n\nVerifique se possui conexão a internet e se o link do serviço está disponível ");
+                Console.ReadKey();
+            }
+
+
+        }
+
+
+    }
+}
